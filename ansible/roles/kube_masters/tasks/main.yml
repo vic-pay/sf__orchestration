@@ -1,0 +1,42 @@
+---
+- name: initialize the cluster
+  shell: '{{ kube_init }}'
+  args:
+    chdir: $HOME
+    creates: cluster_initialized.txt
+  when: "'kube_masters' in group_names"
+
+- name: create .kube directory
+  become: yes
+  become_user: '{{ kube_user }}'
+  file:
+    path: $HOME/.kube
+    state: directory
+    mode: 0755
+  when: "'kube_masters' in group_names"
+
+- name: copy admin.conf to user's kube config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/{{ kube_user }}/.kube/config
+    remote_src: yes
+    owner: '{{ kube_user }}'
+  when: "'kube_masters' in group_names"
+
+#- name: install Pod network
+#  become: yes
+#  become_user: '{{ kube_user }}'
+#  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml >> pod_network_setup.txt
+#  args:
+#    chdir: $HOME
+#    creates: pod_network_setup.txt
+#  when: "'kube_masters' in group_names"
+
+- name: install dashboard
+  become: yes
+  become_user: '{{ kube_user }}'
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml >> dashboard.txt
+  args:
+    chdir: $HOME
+    creates: dashboard.txt
+  when: "'kube_masters' in group_names"

@@ -1,0 +1,18 @@
+---
+- name: get join command
+  shell: kubeadm token create --print-join-command
+  register: join_command_raw
+  when: "'kube_masters' in group_names"
+
+- name: set join command
+  set_fact:
+    join_command: "{{ join_command_raw.stdout_lines[0] }}"
+  when: "'kube_masters' in group_names"
+
+- name: join cluster
+  shell: "{{ hostvars['master-node'].join_command }} >> node_joined.txt"
+  #shell: "{{ join_command }} >> node_joined.txt"
+  args:
+    chdir: $HOME
+    creates: node_joined.txt
+  when: "'kube_workers' in group_names"

@@ -1,0 +1,21 @@
+all:
+  children:
+    kube_masters:
+      hosts:
+        master-node:
+          ansible_host: master-node
+          ansible_connection: lxd
+          ansible_become_method: sudo
+          ip_address: 10.0.4.70
+    kube_workers:
+      hosts:
+        worker-node:
+          ansible_host: worker-node
+          ansible_connection: lxd
+          ansible_become_method: sudo
+          ip_address: 10.0.4.80
+  vars:
+    kube_init: |
+      kubeadm init \
+      --ignore-preflight-errors=FileContent--proc-sys-net-bridge-bridge-nf-call-iptables,Swap,SystemVerification \
+      --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt

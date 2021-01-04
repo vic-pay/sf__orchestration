@@ -1,0 +1,21 @@
+---
+- name: create the {{ kube_user }} user
+  user: 
+    name: '{{ kube_user }}' 
+    append: yes 
+    state: present 
+    createhome: yes 
+    shell: /bin/bash
+
+- name: allow {{ kube_user }} to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    line: '{{ kube_user }} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: set up authorized keys for the {{ kube_user }} user
+  authorized_key: 
+    user: "{{ kube_user }}" 
+    key:  "{{ item }}"
+  with_file:
+    - ~/.ssh/id_rsa.pub

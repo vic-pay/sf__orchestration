@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - role: kube_accounts
+      tag:  kube_accounts
+
+    - role: kube_dependencies
+      tag:  kube_dependencies
+
+    - role: kube_masters
+      tag:  kube_masters
+
+    - role: kube_workers
+      tag:  kube_workers

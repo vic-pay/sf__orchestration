@@ -1,0 +1,18 @@
+all:
+  children:
+    kube_masters:
+      hosts:
+        master-node:
+          ansible_host: 84.201.148.140
+          ansible_connection: ssh
+          ansible_user: ubuntu
+          ansible_become_method: sudo
+    kube_workers:
+      hosts:
+        worker-node:
+          ansible_host: 84.201.150.193
+          ansible_connection: ssh
+          ansible_user: ubuntu
+          ansible_become_method: sudo
+  vars:
+    kube_init: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
