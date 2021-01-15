@@ -3,14 +3,14 @@ all:
     kube_masters:
       hosts:
         master-node:
-          ansible_host: 84.201.148.140
+          ansible_host: 130.193.56.177
           ansible_connection: ssh
           ansible_user: ubuntu
           ansible_become_method: sudo
     kube_workers:
       hosts:
         worker-node:
-          ansible_host: 84.201.150.193
+          ansible_host: 130.193.58.82
           ansible_connection: ssh
           ansible_user: ubuntu
           ansible_become_method: sudo
